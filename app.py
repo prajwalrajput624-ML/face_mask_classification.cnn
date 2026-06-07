@@ -8,6 +8,8 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.applications.resnet50 import preprocess_input
 from PIL import Image
 import cv2
+import gdown
+import os
 
 #==================================================================================================#
 # Page Config
@@ -30,8 +32,16 @@ class PreprocessLayer(tf.keras.layers.Layer):
 #==================================================================================================#
 @st.cache_resource
 def load_face_mask_model():
+    model_path = "face_mask_model.keras"
+    if not os.path.exists(model_path):
+        with st.spinner("Downloading Model... Please Wait ⏳"):
+            gdown.download(
+                "https://drive.google.com/uc?id=19i_A_Zzyu9uaECCCUeD1as2nV8eWbrF8",
+                model_path,
+                quiet=False
+            )
     model = load_model(
-        "face_masks_model.keras",
+        model_path,
         custom_objects={"PreprocessLayer": PreprocessLayer}
     )
     return model
